@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+</head>
+<body>
+<h1>Список усіх користувачів: </h1>
+<table>
+    <tr>
+        <th>Ім`я користувача</th>
+        <th>Роль</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getUsername()}">Username</td>
+        <td th:text="${user.getRole()}">Role</td>
+    </tr>
+</table>
+</body>
+</html>

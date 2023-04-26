@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a sec:authorize="isAuthenticated()" href="/profile">Профіль користувача</a>
+<a sec:authorize="isAnonymous()" href="/auth/login">Логін</a>
+<br/>
+<h1>Home page</h1>
+</body>
+</html>

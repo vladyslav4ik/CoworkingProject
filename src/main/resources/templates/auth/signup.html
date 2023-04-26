@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign up page</title>
+    <style>
+        div {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<form th:method="post" th:action="@{/auth/signup}" th:object="${person}">
+    <label for="username">Введіть ім`я користувача: </label>
+    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
+    <input type="text" th:field="*{username}" id="username">
+    </br>
+    <label for="yearOfBirth">Введіть рік народження: </label>
+    <div th:if="${#fields.hasErrors('yearOfBirth')}" th:errors="*{yearOfBirth}">Year of birth error</div>
+    <input type="text" th:field="*{yearOfBirth}" id="yearOfBirth">
+    <br/>
+    <label for="email">Введіть електронну адресу: </label>
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+    <input type="text" th:field="*{email}" id="email">
+    <br/>
+    <label for="password">Введіть пароль: </label>
+    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+    <input type="password" th:field="*{password}" id="password">
+    <br/>
+    <input type="submit" value="Sign up">
+</form>
+</body>
+</html>
