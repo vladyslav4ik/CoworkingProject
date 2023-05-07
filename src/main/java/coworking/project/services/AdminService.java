@@ -3,6 +3,7 @@ package coworking.project.services;
 import coworking.project.models.Person;
 import coworking.project.repositories.PeopleRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 

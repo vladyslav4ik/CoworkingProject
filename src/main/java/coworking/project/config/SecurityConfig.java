@@ -28,23 +28,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .and()
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+                .and()
                 .authorizeRequests()
+                .antMatchers("/h2-console/**")
+                .hasRole("DEVELOPER")
                 .antMatchers("/admin")
                 .hasRole("ADMIN")
-                .antMatchers("/home", "/error", "/auth/signup", "/auth/login")
+                .antMatchers("/", "/error", "/auth/signup", "/auth/login")
                 .permitAll()
                 .anyRequest()
-                .hasAnyRole("USER", "ADMIN")
+                .hasAnyRole("USER", "ADMIN", "DEVELOPER")
                 .and()
                 .formLogin()
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/process_login")
-                .defaultSuccessUrl("/home", true)
+                .defaultSuccessUrl("/", true)
                 .failureUrl("/auth/login?error")
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/home");
+                .logoutSuccessUrl("/");
         return http.build();
     }
 
@@ -63,32 +72,4 @@ public class SecurityConfig {
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/admin")
-//                .hasRole("ADMIN")
-//                .antMatchers("/home", "/error", "/auth/signup", "/auth/login")
-//                .permitAll()
-//                .anyRequest()
-//                .hasAnyRole("USER", "ADMIN")
-//                .and()
-//                .formLogin()
-//                .loginPage("/auth/login")
-//                .loginProcessingUrl("/process_login")
-//                .defaultSuccessUrl("/home", true)
-//                .failureUrl("/auth/login?error")
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/home");
-//    }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(personDetailsService)
-//                .passwordEncoder(getPasswordEncoder());
-//    }
 }

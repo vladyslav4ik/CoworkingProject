@@ -23,8 +23,8 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
         if (peopleService.findByUsername(person.getUsername()).isPresent())
-            errors.rejectValue("username", "", "Користувач з таким ім`ям вже зареєстрован");
+            errors.rejectValue("username", "", "");
         if (peopleService.findByEmail(person.getEmail()).isPresent())
-            errors.rejectValue("email", "", "Користувач з такою електронною адресою вже зареєстрован");
+            errors.rejectValue("email", "", "");
     }
 }

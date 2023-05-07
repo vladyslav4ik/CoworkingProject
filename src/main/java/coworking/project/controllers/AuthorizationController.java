@@ -1,5 +1,7 @@
 package coworking.project.controllers;
 
+import coworking.project.dto.PersonDTO;
+import coworking.project.dto.PersonMapper;
 import coworking.project.models.Person;
 import coworking.project.services.AuthorizationService;
 import coworking.project.util.PersonValidator;
@@ -15,10 +17,12 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/auth")
 public class AuthorizationController {
+    private final PersonMapper personMapper;
     private final PersonValidator personValidator;
     private final AuthorizationService authorizationService;
 
-    public AuthorizationController(PersonValidator personValidator, AuthorizationService authorizationService) {
+    public AuthorizationController(PersonMapper personMapper, PersonValidator personValidator, AuthorizationService authorizationService) {
+        this.personMapper = personMapper;
         this.personValidator = personValidator;
         this.authorizationService = authorizationService;
     }
@@ -29,13 +33,14 @@ public class AuthorizationController {
     }
 
     @GetMapping("/signup")
-    public String getSignupPage(@ModelAttribute("person") Person person) {
+    public String getSignupPage(@ModelAttribute("person") PersonDTO person) {
         return "auth/signup";
     }
 
     @PostMapping("/signup")
-    public String getRegisteredPerson(@ModelAttribute("person") @Valid Person person,
+    public String getRegisteredPerson(@ModelAttribute("person") @Valid PersonDTO personDTO,
                                       BindingResult bindingResult) {
+        Person person = personMapper.convertToPerson(personDTO);
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors())
             return "/auth/signup";

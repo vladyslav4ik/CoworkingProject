@@ -9,12 +9,7 @@
 <p th:text="${'Ім`я користувача: ' + person.getUsername()}">Username</p>
 <p th:text="${'Рік народження: ' + person.getYearOfBirth()}"></p>
 <p th:text="${'Почтова адреса: ' + person.getEmail()}">Email</p>
-<p th:if="${person.getRole() == 'ROLE_USER'}">
-    Роль: Користувач
-</p>
 <p th:if="${person.getRole() == 'ROLE_ADMIN'}">
-    Роль: Адмін
-    <br/>
     <a href="/admin">Переглянути список користувачів</a>
 </p>
 <form th:method="post" th:action="@{/logout}">

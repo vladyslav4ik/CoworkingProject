@@ -1,5 +1,6 @@
 package coworking.project.services;
 
+import coworking.project.exceptions.PersonNotFoundException;
 import coworking.project.models.Person;
 import coworking.project.repositories.PeopleRepository;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,10 @@ public class PeopleService {
 
     public PeopleService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
+    }
+
+    public Person findById(Long id) {
+        return peopleRepository.findById(id).orElseThrow(PersonNotFoundException::new);
     }
 
     public Optional<Person> findByUsername(String username) {
