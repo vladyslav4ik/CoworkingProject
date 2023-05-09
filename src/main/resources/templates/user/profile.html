@@ -9,8 +9,37 @@
 <p th:text="${'Ім`я користувача: ' + person.getUsername()}">Username</p>
 <p th:text="${'Рік народження: ' + person.getYearOfBirth()}"></p>
 <p th:text="${'Почтова адреса: ' + person.getEmail()}">Email</p>
-<p th:if="${person.getRole() == 'ROLE_ADMIN'}">
-    <a href="/admin">Переглянути список користувачів</a>
+<div th:if="${#lists.isEmpty(person.getReservations())}">
+    Ви не маєте жодного запиту на бронювання
+</div>
+<div th:if="${not #lists.isEmpty(person.getReservations())}">
+    <p>Список запитів на бронювання: </p>
+    <table>
+        <tr>
+            <th>Запити</th>
+            <th>Статус</th>
+        </tr>
+        <tr th:each="reservation : ${person.getReservations()}">
+            <td th:text="${'Запит на бронювання № ' + reservation.getId()}">Reservation #</td>
+            <td>
+                <div th:if="not ${reservation.getIsPayed()} == true">
+                    <form th:method="PATCH" th:action="@{/reservations/{id}(id=${reservation.getId()})}">
+                        <input type="submit" value="Сплатити">
+                    </form>
+                </div>
+                <div th:if="${reservation.getIsPayed()} == true">
+                    Запит сплачено
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<p th:if="${person.getRole() == 'ROLE_ADMIN' or person.getRole == ('ROLE_DEVELOPER')}">
+    <a href="/admin">Переглянути список користувачів</a><br/>
+    <a href="/admin/reservations">Список замовлень на бронювання</a>
+</p>
+<p th:if="${person.getRole() == 'ROLE_DEVELOPER'}">
+    <a href="/h2-console">Manage db</a>
 </p>
 <form th:method="post" th:action="@{/logout}">
     <input type="submit" value="Вийти з акаунту">

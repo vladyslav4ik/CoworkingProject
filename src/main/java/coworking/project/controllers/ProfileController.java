@@ -19,7 +19,7 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping
+    @GetMapping()
     public String getUserProfile(Model model) {
         Person person = profileService.getPerson();
         model.addAttribute("person", personMapper.convertToPersonDTO(person));

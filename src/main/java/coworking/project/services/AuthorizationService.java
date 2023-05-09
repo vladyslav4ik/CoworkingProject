@@ -8,10 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthorizationService {
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final PeopleRepository peopleRepository;
 
-    public AuthorizationService(PasswordEncoder passwordEncoder, PeopleRepository peopleRepository) {
+
+    public AuthorizationService(EmailService emailService, PasswordEncoder passwordEncoder, PeopleRepository peopleRepository) {
+        this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
         this.peopleRepository = peopleRepository;
     }
@@ -21,5 +24,6 @@ public class AuthorizationService {
         person.setRole("ROLE_USER");
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         peopleRepository.save(person);
+        emailService.sendSignUpEmail(person.getEmail());
     }
 }

@@ -1,5 +1,6 @@
 package coworking.project.dto;
 
+import coworking.project.models.Reservation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,4 +33,6 @@ public class PersonDTO {
 
     @Min(value = 1915)
     private Integer yearOfBirth;
+
+    private List<Reservation> reservations;
 }

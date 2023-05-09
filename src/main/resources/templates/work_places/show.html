@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Огляд робочого місця</title>
+</head>
+<body>
+<h1>Огляд робочого місця</h1>
+<p th:text="${workPlace.getItemName()}">Name</p>
+<p th:text="${workPlace.getDescription()}">Description</p>
+<p th:text="${workPlace.getPricePerHour()}">Price</p>
+</body>
+</html>

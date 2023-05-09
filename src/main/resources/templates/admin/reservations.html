@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Підтвердження запитів на бронювання</title>
+</head>
+<body>
+<div th:if="${#lists.isEmpty(reservationsToConfirm)}">
+    <p>
+        Нових запитів на бронювання не має
+    </p>
+</div>
+<div th:if="${not #lists.isEmpty(reservationsToConfirm)}" th:each="reservation : ${reservationsToConfirm}">
+    <a th:text="${'Підтвердити бронювання № ' + reservation.getId()}"
+       th:href="@{/admin/reservations/{id}(id=${reservation.getId()})}">
+    </a>
+</div>
+</body>
+</html>

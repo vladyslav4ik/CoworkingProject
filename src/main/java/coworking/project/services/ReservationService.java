@@ -1,9 +1,7 @@
 package coworking.project.services;
 
 import coworking.project.exceptions.ReservationNotFoundException;
-import coworking.project.models.Person;
 import coworking.project.models.Reservation;
-import coworking.project.repositories.PeopleRepository;
 import coworking.project.repositories.ReservationsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,23 +9,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class AdminService {
-    private final PeopleRepository peopleRepository;
+public class ReservationService {
     private final ReservationsRepository reservationsRepository;
 
-    public AdminService(PeopleRepository peopleRepository, ReservationsRepository reservationsRepository) {
-        this.peopleRepository = peopleRepository;
+    public ReservationService(ReservationsRepository reservationsRepository) {
         this.reservationsRepository = reservationsRepository;
     }
 
-    public List<Person> findAll() {
-        return peopleRepository.findAll();
+    public List<Reservation> findAll() {
+        return reservationsRepository.findAll();
+    }
+
+    public List<Reservation> findPayedReservations() {
+        return reservationsRepository.findPayedReservationsToConfirm();
     }
 
     @Transactional
-    public void confirmReservation(Long id) {
+    public void payReservation(Long id) {
         Reservation reservation = reservationsRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
-        reservation.setIsConfirmed(true);
+        reservation.setIsPayed(true);
         reservationsRepository.save(reservation);
     }
 }

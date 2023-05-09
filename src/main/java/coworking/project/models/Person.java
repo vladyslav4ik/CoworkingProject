@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
 @Table(name = "PERSON")
@@ -36,4 +37,7 @@ public class Person {
     @Min(value = 1915)
     @Column(name = "year_of_birth")
     private Integer yearOfBirth;
+
+    @OneToMany(mappedBy = "renter", fetch = FetchType.EAGER)
+    private List<Reservation> reservations;
 }
