@@ -20,6 +20,10 @@ public class ReservationService {
         return reservationsRepository.findAll();
     }
 
+    public Reservation findById(Long id) {
+        return reservationsRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
+    }
+
     public List<Reservation> findPayedReservations() {
         return reservationsRepository.findPayedReservationsToConfirm();
     }
@@ -28,6 +32,11 @@ public class ReservationService {
     public void payReservation(Long id) {
         Reservation reservation = reservationsRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
         reservation.setIsPayed(true);
+        reservationsRepository.save(reservation);
+    }
+
+    @Transactional
+    public void save(Reservation reservation) {
         reservationsRepository.save(reservation);
     }
 }

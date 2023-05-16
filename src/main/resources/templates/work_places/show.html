@@ -9,5 +9,6 @@
 <p th:text="${workPlace.getItemName()}">Name</p>
 <p th:text="${workPlace.getDescription()}">Description</p>
 <p th:text="${workPlace.getPricePerHour()}">Price</p>
+<a th:href="@{/workPlaces/{id}/reservation(id=${workPlace.getId()})}">Зробити замовлення</a>
 </body>
 </html>

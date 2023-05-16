@@ -12,10 +12,12 @@ import java.util.List;
 
 @Service
 public class AdminService {
+    private final EmailService emailService;
     private final PeopleRepository peopleRepository;
     private final ReservationsRepository reservationsRepository;
 
-    public AdminService(PeopleRepository peopleRepository, ReservationsRepository reservationsRepository) {
+    public AdminService(EmailService emailService, PeopleRepository peopleRepository, ReservationsRepository reservationsRepository) {
+        this.emailService = emailService;
         this.peopleRepository = peopleRepository;
         this.reservationsRepository = reservationsRepository;
     }
@@ -29,5 +31,6 @@ public class AdminService {
         Reservation reservation = reservationsRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
         reservation.setIsConfirmed(true);
         reservationsRepository.save(reservation);
+        emailService.sendSuccessfulConfirmedMessage(reservation.getRenter().getEmail());
     }
 }

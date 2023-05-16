@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/h2-console/**")
                 .hasRole("DEVELOPER")
-                .antMatchers("/admin", "/reservations")
+                .antMatchers("/admin")
                 .hasAnyRole("ADMIN", "DEVELOPER")
                 .antMatchers("/", "/error", "/auth/signup", "/auth/login", "/workPlaces")
                 .permitAll()

@@ -1,13 +1,17 @@
 package coworking.project.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @NoArgsConstructor
 @Table(name = "RESERVATION")
@@ -18,13 +22,16 @@ public class Reservation {
     private Long id;
 
     @Column(name = "time_from")
-    private Time timeFrom;
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalTime timeFrom;
 
     @Column(name = "time_to")
-    private Time timeTo;
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalTime timeTo;
 
     @Column(name = "rent_day")
-    private Date rentDay;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate rentDay;
 
     @Column(name = "is_payed")
     private Boolean isPayed;
@@ -35,11 +42,24 @@ public class Reservation {
     @Column(name = "total_price")
     private Double priceTotal;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "work_place_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "work_place_id")
     private WorkPlace workPlace;
 
     @ManyToOne
     @JoinColumn(name = "renter_id")
     private Person renter;
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", timeFrom=" + timeFrom +
+                ", timeTo=" + timeTo +
+                ", rentDay=" + rentDay +
+                ", isPayed=" + isPayed +
+                ", isConfirmed=" + isConfirmed +
+                ", priceTotal=" + priceTotal +
+                '}';
+    }
 }

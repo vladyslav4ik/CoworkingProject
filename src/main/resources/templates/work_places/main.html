@@ -6,7 +6,6 @@
 </head>
 <body>
 <h1>Доступні робочі місця</h1>
-<a href="/reservations/new">Зробити замовлення</a>
 <div th:each="place : ${workPlaces}">
     <a th:href="@{/workPlaces/{id}(id=${place.getId()})}" th:text="${place.getItemName()}"></a>
 </div>

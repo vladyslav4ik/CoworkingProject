@@ -1,16 +1,17 @@
 package coworking.project.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity
-@Table(name = "PERSON")
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Table(name = "PERSON")
 public class Person {
     @Id
     @Column(name = "id")
@@ -40,4 +41,16 @@ public class Person {
 
     @OneToMany(mappedBy = "renter", fetch = FetchType.EAGER)
     private List<Reservation> reservations;
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", yearOfBirth=" + yearOfBirth +
+                '}';
+    }
 }

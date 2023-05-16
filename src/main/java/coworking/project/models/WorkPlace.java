@@ -1,14 +1,16 @@
 package coworking.project.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "WORK_PLACE")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "WORK_PLACE")
 public class WorkPlace {
     @Id
     @Column(name = "id")
@@ -24,6 +26,16 @@ public class WorkPlace {
     @Column(name = "price_per_hour")
     private Double pricePerHour;
 
-    @OneToOne(mappedBy = "workPlace")
-    private  Reservation reservation;
+    @OneToMany(mappedBy = "workPlace", fetch = FetchType.EAGER)
+    private List<Reservation> reservations;
+
+    @Override
+    public String toString() {
+        return "WorkPlace{" +
+                "id=" + id +
+                ", itemName='" + itemName + '\'' +
+                ", description='" + description + '\'' +
+                ", pricePerHour=" + pricePerHour +
+                '}';
+    }
 }
