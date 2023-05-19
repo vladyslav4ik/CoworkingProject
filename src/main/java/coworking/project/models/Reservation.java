@@ -39,6 +39,9 @@ public class Reservation {
     @Column(name = "is_confirmed")
     private Boolean isConfirmed;
 
+    @Column(name = "is_actual")
+    private Boolean isActual;
+
     @Column(name = "total_price")
     private Double priceTotal;
 

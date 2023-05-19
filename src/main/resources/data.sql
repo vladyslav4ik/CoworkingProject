@@ -13,11 +13,11 @@ values ('demo06478@gmail.com', 'user', '$2a$10$2jKKw/RZhuLSX8DnjVK3QeFxHCjZQzphU
 insert into work_place(item_name, description, price_per_hour)
 values ('Робоче місце № 1', 'Комфортний стіл та стілець для роботи', 100.0);
 
-insert into work_place(item_name, description, price_per_hour, is_available)
-values ('Робоче місце № 2', 'Комфортний стіл та стілець для роботи', 100.0, false);
+insert into work_place(item_name, description, price_per_hour)
+values ('Робоче місце № 2', 'Комфортний стіл та стілець для роботи', 100.0);
 
 insert into work_place(item_name, description, price_per_hour)
 values ('Робоче місце № 3', 'Комфортний стіл та стілець для роботи', 100.0);
 
-insert into reservation(work_place_id, renter_id, rent_day, time_from, time_to, total_price, is_payed)
-values (2, 3, current_date, current_time, current_time + 2 minute, 100, false);
+insert into reservation(work_place_id, renter_id, rent_day, time_from, time_to, total_price, is_payed, is_confirmed)
+values (2, 3, current_date, current_time + 1 minute, current_time + 2 minute, 100, true, true);

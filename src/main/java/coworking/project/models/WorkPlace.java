@@ -26,6 +26,9 @@ public class WorkPlace {
     @Column(name = "price_per_hour")
     private Double pricePerHour;
 
+    @Column(name = "is_available")
+    private Boolean isAvailable;
+
     @OneToMany(mappedBy = "workPlace", fetch = FetchType.EAGER)
     private List<Reservation> reservations;
 

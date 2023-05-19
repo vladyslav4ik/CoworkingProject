@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Забронювати місце</title>
+</head>
+<body>
+<h1>Забронювати місце</h1>
+<div th:if="${reservation.getTime} == 'full'">
+    <p>Вільного часу на сьогодні не має. Будь ласка оберіть іншу дату для бронювання</p>
+</div>
+<div th:if="${reservation.getTime} != 'full'">
+    <form method="post" th:action="@{/workPlaces/{id}/reservation/new(id=${workPlace.getId()})}"
+          th:object="${reservation}">
+        <label for="time">Оберіть бажаний час оренди: </label>
+        <div th:if="${reservation.getTime()} != 'first' AND ${reservation.getTime()} != 'full'">
+            <input type="radio" id="time" th:field="*{time}" value="first" required/> Перша половина дня (8 - 13)<br/>
+        </div>
+        <div th:if="${reservation.getTime()} != 'second' AND ${reservation.getTime()} != 'full'">
+            <input type="radio" id="time" th:field="*{time}" value="second" required/> Друга половина дня (13 - 18)<br/>
+        </div>
+        <div th:if="${reservation.getTime()} != 'full' AND ${reservation.getTime()} != 'first'
+    AND ${reservation.getTime()} != 'second'">
+            <input type="radio" id="time" th:field="*{time}" value="full" required/> Цілий день (8 - 18)<br/>
+        </div>
+        <input type="hidden" th:value="${reservation.getRentDay()}" th:field="*{rentDay}"/>
+        <input type="submit" value="Забронювати"/>
+    </form>
+</div>
+<form method="get" th:action="@{/workPlaces/{id}/reservation(id=${workPlace.getId()})}">
+    <input type="submit" value="Обрати іншу дату"/><br/>
+</form>
+</body>
+</html>

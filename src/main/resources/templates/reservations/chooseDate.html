@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Забронювати місце</title>
+</head>
+<body>
+<h1>Забронювати місце</h1>
+<form method="get" th:action="@{/workPlaces/{id}/reservation/new(id=${workPlace.getId()})}"
+      th:object="${reservation}">
+    <label for="rent_date">День оренди:</label>
+    <div th:if="${#fields.hasErrors('rentDay')}" style="color:red" th:errors="*{rentDay}">Rent day error</div>
+    <input type="date" id="rent_date" th:field="*{rentDay}" required/><br/>
+    <input type="submit" value="Обрати час"/>
+</form>
+<a th:href="@{/}">На головну</a>
+</body>
+</html>

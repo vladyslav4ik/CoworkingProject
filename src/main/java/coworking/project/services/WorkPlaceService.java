@@ -4,6 +4,7 @@ import coworking.project.exceptions.WorkPlaceNotFoundException;
 import coworking.project.models.WorkPlace;
 import coworking.project.repositories.WorkPlacesRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,5 +26,10 @@ public class WorkPlaceService {
 
     public WorkPlace findById(Long id) {
         return workPlacesRepository.findById(id).orElseThrow(WorkPlaceNotFoundException::new);
+    }
+
+    @Transactional
+    public void update(WorkPlace workPlace) {
+        workPlacesRepository.save(workPlace);
     }
 }

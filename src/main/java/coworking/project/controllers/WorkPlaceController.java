@@ -6,10 +6,13 @@ import coworking.project.dto.WorkPlaceMapper;
 import coworking.project.models.Reservation;
 import coworking.project.services.ReservationService;
 import coworking.project.services.WorkPlaceService;
+import coworking.project.util.ReservationValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 @Controller
@@ -19,13 +22,15 @@ public class WorkPlaceController {
     private final WorkPlaceService workPlaceService;
     private final ReservationMapper reservationMapper;
     private final ReservationService reservationService;
+    private final ReservationValidator reservationValidator;
 
     public WorkPlaceController(WorkPlaceMapper workPlaceMapper, WorkPlaceService workPlaceService, ReservationMapper
-            reservationMapper, ReservationService reservationService) {
+            reservationMapper, ReservationService reservationService, ReservationValidator reservationValidator) {
         this.workPlaceMapper = workPlaceMapper;
         this.workPlaceService = workPlaceService;
         this.reservationMapper = reservationMapper;
         this.reservationService = reservationService;
+        this.reservationValidator = reservationValidator;
     }
 
     @GetMapping()
@@ -48,10 +53,24 @@ public class WorkPlaceController {
                                      @ModelAttribute("reservation") ReservationDTO reservationDTO) {
         model.addAttribute("workPlace",
                 workPlaceMapper.convertToWorkPlaceDTO(workPlaceService.findById(id)));
-        return "reservations/index";
+        return "reservations/chooseDate";
     }
 
-    @PostMapping("/{id}/reservation")
+    @GetMapping("/{id}/reservation/new")
+    public String createNewReservation(@PathVariable("id") Long id, Model model,
+                                       @ModelAttribute("reservation") @Valid ReservationDTO reservationDTO
+            , BindingResult bindingResult) {
+        model.addAttribute("workPlace",
+                workPlaceMapper.convertToWorkPlaceDTO(workPlaceService.findById(id)));
+        reservationValidator.validate(reservationDTO, bindingResult);
+        if (bindingResult.hasErrors())
+            return "/reservations/chooseDate";
+        reservationMapper.updateReservationDTO(reservationDTO, id, reservationDTO.getRentDay());
+        model.addAttribute("reservation", reservationDTO);
+        return "reservations/createReservation";
+    }
+
+    @PostMapping("/{id}/reservation/new")
     public String saveReservation(@PathVariable("id") Long id, @ModelAttribute("reservation") ReservationDTO
             reservationDTO) {
         Reservation reservation = reservationMapper.convertToReservation(reservationDTO);
