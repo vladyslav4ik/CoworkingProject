@@ -1,34 +1,59 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/header :: header">
     <title>Забронювати місце</title>
 </head>
-<body>
-<h1>Забронювати місце</h1>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
 <div th:if="${reservation.getTime} == 'full'">
-    <p>Вільного часу на сьогодні не має. Будь ласка оберіть іншу дату для бронювання</p>
+    <h3 class="font-monospace">Вільного часу на сьогодні не має. Будь ласка оберіть іншу дату для бронювання</h3>
+    <div class="d-flex justify-content-center">
+        <a th:href="@{/workPlaces/{id}/reservation(id=${workPlace.getId()})}" class="btn btn-primary">Обрати
+            іншу дату</a>
+    </div>
 </div>
-<div th:if="${reservation.getTime} != 'full'">
-    <form method="post" th:action="@{/workPlaces/{id}/reservation/new(id=${workPlace.getId()})}"
-          th:object="${reservation}">
-        <label for="time">Оберіть бажаний час оренди: </label>
-        <div th:if="${reservation.getTime()} != 'first' AND ${reservation.getTime()} != 'full'">
-            <input type="radio" id="time" th:field="*{time}" value="first" required/> Перша половина дня (8 - 13)<br/>
-        </div>
-        <div th:if="${reservation.getTime()} != 'second' AND ${reservation.getTime()} != 'full'">
-            <input type="radio" id="time" th:field="*{time}" value="second" required/> Друга половина дня (13 - 18)<br/>
-        </div>
-        <div th:if="${reservation.getTime()} != 'full' AND ${reservation.getTime()} != 'first'
+<div th:if="${reservation.getTime} != 'full'" class="d-flex justify-content-center">
+    <fieldset>
+        <legend>Оберіть бажаний час оренди</legend>
+        <form method="post" th:action="@{/workPlaces/{id}/reservation/new(id=${workPlace.getId()})}"
+              th:object="${reservation}">
+
+            <div class="form-check" th:if="${reservation.getTime()} != 'first' AND ${reservation.getTime()} != 'full'">
+                <input class="form-check-input" th:field="*{time}" type="radio" id="first" value="first" name="time"
+                       required>
+                <label class="form-check-label" for="first">
+                    Перша половина дня (8 - 13)
+                </label>
+            </div>
+
+            <div class="form-check" th:if="${reservation.getTime()} != 'second' AND ${reservation.getTime()} != 'full'">
+                <input class="form-check-input" th:field="*{time}" type="radio" id="second" value="second" name="time"
+                       required>
+                <label class="form-check-label" for="second">
+                    Друга половина дня (13 - 18)
+                </label>
+            </div>
+
+            <div class="form-check" th:if="${reservation.getTime()} != 'full' AND ${reservation.getTime()} != 'first'
     AND ${reservation.getTime()} != 'second'">
-            <input type="radio" id="time" th:field="*{time}" value="full" required/> Цілий день (8 - 18)<br/>
-        </div>
-        <input type="hidden" th:value="${reservation.getRentDay()}" th:field="*{rentDay}"/>
-        <input type="submit" value="Забронювати"/>
-    </form>
+                <input class="form-check-input" th:field="*{time}" type="radio" id="full" value="full" name="time"
+                       required>
+                <label class="form-check-label" for="full">
+                    Цілий день (8 - 18)
+                </label>
+            </div>
+            <br/>
+            <input type="hidden" th:value="${reservation.getRentDay()}" th:field="*{rentDay}"/>
+            <div class="btn-group">
+                <input type="submit" value="Забронювати" class="btn btn-primary active"/>
+                <a th:href="@{/workPlaces/{id}/reservation(id=${workPlace.getId()})}" class="btn btn-primary">Обрати
+                    іншу дату</a>
+            </div>
+        </form>
+    </fieldset>
 </div>
-<form method="get" th:action="@{/workPlaces/{id}/reservation(id=${workPlace.getId()})}">
-    <input type="submit" value="Обрати іншу дату"/><br/>
-</form>
+<br/>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

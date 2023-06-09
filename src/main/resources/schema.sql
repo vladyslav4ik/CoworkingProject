@@ -1,6 +1,6 @@
 create table person
 (
-    id            int auto_increment primary key,
+    id            long auto_increment primary key,
     email         varchar(100) unique not null,
     username      varchar(100) unique not null,
     password      varchar             not null,
@@ -10,16 +10,16 @@ create table person
 
 create table work_place
 (
-    id             int auto_increment primary key,
-    item_name      varchar(100) not null,
-    description    text         not null,
-    price_per_hour decimal check (price_per_hour > 0),
-    is_available   boolean default true
+    id           long auto_increment primary key,
+    item_name    varchar(100) not null,
+    description  text         not null,
+    is_available boolean default true,
+    img_url      varchar      not null
 );
 
 create table reservation
 (
-    id            int auto_increment primary key,
+    id            long auto_increment primary key,
     work_place_id int references work_place (id) on delete cascade,
     renter_id     int references person (id) on delete cascade,
     rent_day      date check (rent_day >= current_date) not null,
@@ -31,4 +31,12 @@ create table reservation
     total_price   decimal                               not null,
     foreign key (work_place_id) references work_place (id),
     foreign key (renter_id) references person (id)
+);
+
+create table rating
+(
+    id              long auto_increment primary key,
+    work_place_id   long references work_place (id) on delete cascade,
+    number_of_using int not null default 0,
+    foreign key (work_place_id) references work_place (id)
 );

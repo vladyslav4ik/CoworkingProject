@@ -1,33 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/header :: header">
     <title>Sign up page</title>
-    <style>
-        div {
-            color: red;
-        }
-    </style>
 </head>
-<body>
-<form th:method="post" th:action="@{/auth/signup}" th:object="${person}">
-    <label for="username">Введіть ім`я користувача: </label>
-    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
-    <input type="text" th:field="*{username}" id="username">
-    </br>
-    <label for="yearOfBirth">Введіть рік народження: </label>
-    <div th:if="${#fields.hasErrors('yearOfBirth')}" th:errors="*{yearOfBirth}">Year of birth error</div>
-    <input type="text" th:field="*{yearOfBirth}" id="yearOfBirth">
-    <br/>
-    <label for="email">Введіть електронну адресу: </label>
-    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
-    <input type="text" th:field="*{email}" id="email">
-    <br/>
-    <label for="password">Введіть пароль: </label>
-    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
-    <input type="password" th:field="*{password}" id="password">
-    <br/>
-    <input type="submit" value="Sign up">
-</form>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<fieldset>
+    <legend>Створення акаунту</legend>
+    <div class="d-flex justify-content-center">
+        <form th:method="post" th:action="@{/auth/signup}" th:object="${person}">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('username')}"
+                 th:errors="*{username}"></div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="username" name="username"
+                       placeholder="username" th:field="*{username}" size="80">
+                <label for="username">Ім'я користувача</label>
+            </div>
+
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('yearOfBirth')}"
+                 th:errors="*{yearOfBirth}"></div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="yearOfBirth" name="yearOfBirth"
+                       placeholder="yearOfBirth" th:field="*{yearOfBirth}">
+                <label for="yearOfBirth">Рік народження</label>
+            </div>
+
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('email')}"
+                 th:errors="*{email}"></div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email"
+                       placeholder="email" th:field="*{email}">
+                <label for="email">Поштова скринька</label>
+            </div>
+
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('password')}"
+                 th:errors="*{password}"></div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" name="password"
+                       placeholder="password" th:field="*{password}">
+                <label for="password">Пароль</label>
+            </div>
+            <br/>
+            <div class="btn-group">
+                <input type="submit" class="btn btn-primary active" value="Створити акаунт">
+                <a href="/auth/login" class="btn btn-primary">Логін</a>
+            </div>
+        </form>
+    </div>
+</fieldset>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/header :: header">
     <title>Admin page</title>
 </head>
-<body>
-<h1>Список усіх користувачів: </h1>
-<table>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
+<h1 class="font-monospace">Список усіх користувачів: </h1>
+<br/>
+<table class="table table-sm w-50 mx-auto">
     <tr>
-        <th>Ім`я користувача</th>
+        <th>Ім'я користувача</th>
         <th>Роль</th>
         <th>Змінити роль</th>
     </tr>
@@ -18,11 +20,15 @@
         <div th:if="${user.getRole() == 'ROLE_USER'}">
             <td>
                 <form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}">
-                    <input type="submit" value="Змінити">
+                    <input type="submit" value="Змінити" class="btn btn-primary">
                 </form>
             </td>
         </div>
+        <div th:if="${user.getRole() != 'ROLE_USER'}">
+            <td></td>
+        </div>
     </tr>
 </table>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

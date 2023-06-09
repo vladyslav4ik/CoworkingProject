@@ -15,11 +15,14 @@ public class ProfileService {
     }
 
     public Person getPerson() {
-        return peopleService.findById(getCurrentUser().getId());
+        Person person = getCurrentUser();
+        return (person.getId() == null) ? person : peopleService.findById(person.getId());
     }
 
     private Person getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal().equals("anonymousUser"))
+            return new Person();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         return personDetails.getPerson();
     }

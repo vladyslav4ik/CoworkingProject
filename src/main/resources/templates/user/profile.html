@@ -1,30 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/header :: header">
     <title>User profile</title>
 </head>
-<body>
-<h1>User profile</h1>
-<p th:text="${'Ім`я користувача: ' + person.getUsername()}">Username</p>
-<p th:text="${'Рік народження: ' + person.getYearOfBirth()}"></p>
-<p th:text="${'Почтова адреса: ' + person.getEmail()}">Email</p>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
+<h1 class="font-monospace">Профіль користувача</h1>
+<table class="table table-sw w-50 mx-auto">
+    <tr>
+        <td>Ім'я користувача: </td>
+        <td th:text="${person.getUsername()}"></td>
+    </tr>
+    <tr>
+        <td>Рік народження: </td>
+        <td th:text="${person.getYearOfBirth()}"></td>
+    </tr>
+    <tr>
+        <td>Поштова скринька: </td>
+        <td th:text="${person.getEmail()}"></td>
+    </tr>
+</table>
+<br/>
+<form method="get" th:action="@{/profile/edit}">
+    <input type="submit" value="Редагувати профіль" class="btn btn-primary">
+</form>
+<br/>
+<form th:method="post" th:action="@{/logout}">
+    <input type="submit" value="Вийти з акаунту" class="btn btn-primary">
+</form>
+<br/>
 <div th:if="${#lists.isEmpty(person.getReservations())}">
     Ви не маєте жодного запиту на бронювання
 </div>
 <div th:if="${not #lists.isEmpty(person.getReservations())}">
-    <p>Список запитів на бронювання: </p>
-    <table>
+    <h1 class="font-monospace">Список запитів на бронювання: </h1>
+    <table class="table table-sm w-50 mx-auto">
         <tr>
             <th>Запити</th>
             <th>Статус</th>
         </tr>
-        <tr th:each="reservation : ${person.getReservations()}">
-            <td th:text="${'Запит на бронювання № ' + reservation.getId()}">Reservation #</td>
+        <tr th:each="reservation, i : ${person.getReservations()}">
+            <td th:text="${'Запит на бронювання № ' + i.count}">Reservation #</td>
             <td>
                 <div th:if="not ${reservation.getIsPayed()} == true">
                     <form th:method="PATCH" th:action="@{/reservations/{id}(id=${reservation.getId()})}">
-                        <input type="submit" value="Сплатити">
+                        <input type="submit" value="Сплатити" class="btn btn-primary">
                     </form>
                 </div>
                 <div th:if="${reservation.getIsPayed()} == true">
@@ -34,15 +55,16 @@
         </tr>
     </table>
 </div>
-<p th:if="${person.getRole() == 'ROLE_ADMIN' or person.getRole == ('ROLE_DEVELOPER')}">
-    <a href="/admin">Переглянути список користувачів</a><br/>
-    <a href="/admin/reservations">Список замовлень на бронювання</a>
-</p>
-<p th:if="${person.getRole() == 'ROLE_DEVELOPER'}">
-    <a href="/h2-console">Manage db</a>
-</p>
-<form th:method="post" th:action="@{/logout}">
-    <input type="submit" value="Вийти з акаунту">
-</form>
+<br/>
+<div class="btn-group" th:if="${person.getRole() == 'ROLE_ADMIN' or person.getRole == ('ROLE_DEVELOPER')}">
+    <a href="/admin" class="btn btn-primary active">Список користувачів</a>
+    <a href="/admin/reservations" class="btn btn-primary">Замовлення на бронювання</a>
+</div>
+<br/>
+<br/>
+<div th:if="${person.getRole() == 'ROLE_DEVELOPER'}">
+    <a href="/h2-console" class="btn btn-primary">Manage db</a>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

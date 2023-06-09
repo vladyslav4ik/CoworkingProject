@@ -1,9 +1,11 @@
 package coworking.project.dto;
 
 import coworking.project.models.Person;
+import coworking.project.models.Rating;
 import coworking.project.models.Reservation;
 import coworking.project.models.WorkPlace;
 import coworking.project.services.ProfileService;
+import coworking.project.services.RatingService;
 import coworking.project.services.ReservationService;
 import coworking.project.services.WorkPlaceService;
 import org.modelmapper.ModelMapper;
@@ -56,8 +58,8 @@ public class ReservationMapper {
     }
 
     public void setOtherValues(Reservation reservation, ReservationDTO reservationDTO, Long workPlaceId) {
-        WorkPlace workPlace = workPlaceService.findById(workPlaceId);
         Person person = profileService.getPerson();
+        WorkPlace workPlace = workPlaceService.findById(workPlaceId);
         reservation.setIsPayed(false);
         reservation.setIsConfirmed(false);
         reservation.setIsActual(true);
@@ -71,15 +73,15 @@ public class ReservationMapper {
         if (reservationDTO.getTime().equals("first")) {
             reservation.setTimeFrom(LocalTime.of(8, 0));
             reservation.setTimeTo(LocalTime.of(13, 0));
-            reservation.setPriceTotal(800.0);
+            reservation.setPriceTotal(500.0);
         } else if (reservationDTO.getTime().equals("second")) {
             reservation.setTimeFrom(LocalTime.of(13, 0));
             reservation.setTimeTo(LocalTime.of(18, 0));
-            reservation.setPriceTotal(800.0);
+            reservation.setPriceTotal(500.0);
         } else {
             reservation.setTimeFrom(LocalTime.of(8, 0));
             reservation.setTimeTo(LocalTime.of(18, 0));
-            reservation.setPriceTotal(600.0);
+            reservation.setPriceTotal(400.0);
         }
     }
 

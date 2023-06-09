@@ -9,5 +9,5 @@ public class WorkPlaceDTO {
     private Long id;
     private String itemName;
     private String description;
-    private Double pricePerHour;
+    private String imgUrl;
 }

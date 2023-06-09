@@ -6,6 +6,7 @@ import coworking.project.models.Person;
 import coworking.project.services.AuthorizationService;
 import coworking.project.util.PersonValidator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,12 +29,14 @@ public class AuthorizationController {
     }
 
     @GetMapping("/login")
-    public String getLoginPage() {
+    public String getLoginPage(Model model) {
+        model.addAttribute("title", "Логін");
         return "auth/login";
     }
 
     @GetMapping("/signup")
-    public String getSignupPage(@ModelAttribute("person") PersonDTO person) {
+    public String getSignupPage(@ModelAttribute("person") PersonDTO person, Model model) {
+        model.addAttribute("title", "Створення акаунту");
         return "auth/signup";
     }
 
@@ -43,7 +46,7 @@ public class AuthorizationController {
         Person person = personMapper.convertToPerson(personDTO);
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors())
-            return "/auth/signup";
+            return "auth/signup";
         authorizationService.save(person);
         return "redirect:/home";
     }

@@ -1,6 +1,7 @@
 package coworking.project.services;
 
 import coworking.project.exceptions.ReservationNotFoundException;
+import coworking.project.models.Rating;
 import coworking.project.models.Reservation;
 import coworking.project.repositories.ReservationsRepository;
 import org.springframework.stereotype.Service;
@@ -11,14 +12,12 @@ import java.util.List;
 
 @Service
 public class ReservationService {
+    private final RatingService ratingService;
     private final ReservationsRepository reservationsRepository;
 
-    public ReservationService(ReservationsRepository reservationsRepository) {
+    public ReservationService(RatingService ratingService, ReservationsRepository reservationsRepository) {
+        this.ratingService = ratingService;
         this.reservationsRepository = reservationsRepository;
-    }
-
-    public List<Reservation> findAll() {
-        return reservationsRepository.findAll();
     }
 
     public Reservation findById(Long id) {
@@ -41,6 +40,9 @@ public class ReservationService {
     public void payReservation(Long id) {
         Reservation reservation = reservationsRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
         reservation.setIsPayed(true);
+        Rating rating = reservation.getWorkPlace().getRating();
+        rating.setNumberOfUsing(rating.getNumberOfUsing() + 1);
+        ratingService.update(rating);
         reservationsRepository.save(reservation);
     }
 

@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/header :: header">
     <title>Підтвердження запитів на бронювання</title>
 </head>
-<body>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
+<h1 class="font-monospace">Підтвердження запитів на бронювання</h1>
+<br/>
 <div th:if="${#lists.isEmpty(reservationsToConfirm)}">
-    <p>
+    <h3 class="font-monospace">
         Нових запитів на бронювання не має
-    </p>
+    </h3>
 </div>
 <div th:if="${not #lists.isEmpty(reservationsToConfirm)}" th:each="reservation : ${reservationsToConfirm}">
     <a th:text="${'Підтвердити бронювання № ' + reservation.getId()}"
-       th:href="@{/admin/reservations/{id}(id=${reservation.getId()})}">
+       th:href="@{/admin/reservations/{id}(id=${reservation.getId()})}" class="btn btn-primary">
     </a>
 </div>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

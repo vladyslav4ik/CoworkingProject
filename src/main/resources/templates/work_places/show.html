@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/header :: header">
     <title>Огляд робочого місця</title>
 </head>
-<body>
-<h1>Огляд робочого місця</h1>
-<p th:text="${workPlace.getItemName()}">Name</p>
-<p th:text="${workPlace.getDescription()}">Description</p>
-<p th:text="${workPlace.getPricePerHour()}">Price</p>
-<a th:href="@{/workPlaces/{id}/reservation(id=${workPlace.getId()})}">Зробити замовлення</a>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
+<div class="d-flex justify-content-center">
+    <div class="card mb-3 w-50">
+        <img th:src="@{${workPlace.getImgUrl()}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${workPlace.getItemName()}">Card title</h5>
+            <p class="card-text" th:text="${workPlace.getDescription()}">Description</p>
+            <a th:href="@{/workPlaces/{id}/reservation(id=${workPlace.getId()})}" class="btn btn-primary">Забронювати</a>
+        </div>
+    </div>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

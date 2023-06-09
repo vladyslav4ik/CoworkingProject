@@ -23,14 +23,17 @@ public class WorkPlace {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "price_per_hour")
-    private Double pricePerHour;
-
     @Column(name = "is_available")
     private Boolean isAvailable;
 
+    @Column(name = "img_url")
+    private String imgUrl;
+
     @OneToMany(mappedBy = "workPlace", fetch = FetchType.EAGER)
     private List<Reservation> reservations;
+
+    @OneToOne(mappedBy = "workPlace")
+    private Rating rating;
 
     @Override
     public String toString() {
@@ -38,7 +41,6 @@ public class WorkPlace {
                 "id=" + id +
                 ", itemName='" + itemName + '\'' +
                 ", description='" + description + '\'' +
-                ", pricePerHour=" + pricePerHour +
                 '}';
     }
 }

@@ -1,5 +1,3 @@
 package coworking.project.exceptions;
 
-public class PersonNotFoundException extends RuntimeException {
-
-}
+public class PersonNotFoundException extends RuntimeException { }

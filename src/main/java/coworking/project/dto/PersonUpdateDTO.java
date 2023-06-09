@@ -1,39 +1,28 @@
 package coworking.project.dto;
 
-import coworking.project.models.Reservation;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-public class PersonDTO {
-    private Long id;
-
-    @Email
-    private String email;
-
+@AllArgsConstructor
+public class PersonUpdateDTO {
     @NotEmpty
     @Size(min = 2, max = 100)
     private String username;
-
     @Size(min = 8)
     private String password;
-
-    private String role;
-
+    @Email
+    @NotEmpty
+    private String email;
     @Min(value = 1915)
     private Integer yearOfBirth;
-
-    private List<Reservation> reservations;
 }

@@ -1,4 +1,3 @@
 package coworking.project.exceptions;
 
-public class ReservationNotFoundException extends RuntimeException {
-}
+public class ReservationNotFoundException extends RuntimeException { }

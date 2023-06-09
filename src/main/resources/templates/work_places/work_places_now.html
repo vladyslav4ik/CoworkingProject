@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+</head>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
+<h1 class="font-monospace">Статус робочих місць</h1>
+<table class="table table-sm d-flex justify-content-center">
+    <tr>
+        <th>№</th>
+        <th>Зображення</th>
+        <th>Статус</th>
+        <th></th>
+    </tr>
+    <tr th:each="workPlace : ${list}">
+        <td th:text="${workPlace.getId()}">Id</td>
+        <td><img th:src="@{${workPlace.getImgUrl()}}"></td>
+        <td th:if="${workPlace.getIsAvailable()} == true">&#10004;</td>
+        <td th:if="${workPlace.getIsAvailable()} == false">&#10006;</td>
+        <td><a th:href="@{/workPlaces/{id}(id=${workPlace.getId()})}" class="btn btn-primary">Переглянути</a></td>
+    </tr>
+</table>
+<p>&#10004; - вільне місце, &#10006; - зайняте місце</p>
+<br/>
+<br/>
+<br/>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

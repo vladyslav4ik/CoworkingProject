@@ -12,7 +12,6 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-
     public void sendSignUpEmail(String to) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("coworking.email.test@gmail.com");

@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Каталог робочих місць</title>
+<head th:replace="fragments/header :: header">
+    <th:title>Каталог робочих місць</th:title>
 </head>
-<body>
-<h1>Доступні робочі місця</h1>
-<div th:each="place : ${workPlaces}">
-    <a th:href="@{/workPlaces/{id}(id=${place.getId()})}" th:text="${place.getItemName()}"></a>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
+<h1 class="font-monospace">Робочі місця</h1>
+<br/>
+<div th:each="place : ${workPlaces}" class="d-flex justify-content-center">
+    <div class="card mb-3 w-50">
+        <img th:src="@{${place.getImgUrl()}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${place.getItemName()}">Card title</h5>
+            <p class="card-text" th:text="${place.getDescription()}">Description</p>
+            <a th:href="@{/workPlaces/{id}(id=${place.getId()})}" class="btn btn-primary">Переглянути</a>
+        </div>
+    </div>
 </div>
+<br/>
+<br/>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

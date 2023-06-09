@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/header :: header">
     <title>Забронювати місце</title>
 </head>
-<body>
-<h1>Забронювати місце</h1>
-<form method="get" th:action="@{/workPlaces/{id}/reservation/new(id=${workPlace.getId()})}"
-      th:object="${reservation}">
-    <label for="rent_date">День оренди:</label>
-    <div th:if="${#fields.hasErrors('rentDay')}" style="color:red" th:errors="*{rentDay}">Rent day error</div>
-    <input type="date" id="rent_date" th:field="*{rentDay}" required/><br/>
-    <input type="submit" value="Обрати час"/>
-</form>
-<a th:href="@{/}">На головну</a>
+<body class="text-center">
+<div th:replace="fragments/menu :: menu"></div>
+<br/>
+<div class="d-flex justify-content-center">
+    <fieldset>
+        <legend>Обрати дату бронювання</legend>
+        <form method="get" th:action="@{/workPlaces/{id}/reservation/new(id=${workPlace.getId()})}"
+              th:object="${reservation}" class="row g-1">
+            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('rentDay')}"
+                 th:errors="*{rentDay}"></div>
+            <div class="form-floating mb-3">
+                <input type="date" class="form-control form-control-sm" placeholder="rent_date" id="rent_date"
+                       th:field="*{rentDay}" size="30" required/><br/>
+                <label for="rent_date">День оренди:</label>
+                <input type="submit" value="Обрати час" class="btn btn-primary"/>
+            </div>
+        </form>
+    </fieldset>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
