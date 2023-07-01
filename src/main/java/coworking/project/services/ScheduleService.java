@@ -10,17 +10,17 @@ import java.util.List;
 
 @Service
 public class ScheduleService {
-    private final WorkPlaceService workPlaceService;
-    private final ReservationService reservationService;
+    private final WorkPlaceServiceImpl workPlaceServiceImpl;
+    private final ReservationServiceImpl reservationServiceImpl;
 
-    public ScheduleService(WorkPlaceService workPlaceService, ReservationService reservationService) {
-        this.workPlaceService = workPlaceService;
-        this.reservationService = reservationService;
+    public ScheduleService(WorkPlaceServiceImpl workPlaceServiceImpl, ReservationServiceImpl reservationServiceImpl) {
+        this.workPlaceServiceImpl = workPlaceServiceImpl;
+        this.reservationServiceImpl = reservationServiceImpl;
     }
 
     @Scheduled(fixedDelay = 60_000)
     public void checkActualityOfInformation() {
-        List<Reservation> reservations = reservationService.findAllConfirmedReservations();
+        List<Reservation> reservations = reservationServiceImpl.findAllConfirmedReservations();
         for (Reservation reservation : reservations) {
             if (reservation.getTimeFrom().isBefore(LocalTime.now())) {
                 reservation.getWorkPlace().setIsAvailable(false);
@@ -29,8 +29,8 @@ public class ScheduleService {
                 reservation.setIsActual(false);
                 reservation.getWorkPlace().setIsAvailable(true);
             }
-            reservationService.save(reservation);
-            workPlaceService.update(reservation.getWorkPlace());
+            reservationServiceImpl.save(reservation);
+            workPlaceServiceImpl.update(reservation.getWorkPlace());
         }
     }
 }

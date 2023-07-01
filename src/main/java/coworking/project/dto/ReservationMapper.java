@@ -1,13 +1,11 @@
 package coworking.project.dto;
 
 import coworking.project.models.Person;
-import coworking.project.models.Rating;
 import coworking.project.models.Reservation;
 import coworking.project.models.WorkPlace;
-import coworking.project.services.ProfileService;
-import coworking.project.services.RatingService;
-import coworking.project.services.ReservationService;
-import coworking.project.services.WorkPlaceService;
+import coworking.project.services.ProfileServiceImpl;
+import coworking.project.services.ReservationServiceImpl;
+import coworking.project.services.WorkPlaceServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -19,15 +17,15 @@ import java.util.List;
 @Component
 public class ReservationMapper {
     private final ModelMapper modelMapper;
-    private final ProfileService profileService;
-    private final WorkPlaceService workPlaceService;
-    private final ReservationService reservationService;
+    private final ProfileServiceImpl profileServiceImpl;
+    private final WorkPlaceServiceImpl workPlaceServiceImpl;
+    private final ReservationServiceImpl reservationServiceImpl;
 
-    public ReservationMapper(ModelMapper modelMapper, ProfileService profileService, WorkPlaceService workPlaceService, ReservationService reservationService) {
+    public ReservationMapper(ModelMapper modelMapper, ProfileServiceImpl profileServiceImpl, WorkPlaceServiceImpl workPlaceServiceImpl, ReservationServiceImpl reservationServiceImpl) {
         this.modelMapper = modelMapper;
-        this.profileService = profileService;
-        this.workPlaceService = workPlaceService;
-        this.reservationService = reservationService;
+        this.profileServiceImpl = profileServiceImpl;
+        this.workPlaceServiceImpl = workPlaceServiceImpl;
+        this.reservationServiceImpl = reservationServiceImpl;
     }
 
     public Reservation convertToReservation(ReservationDTO reservationDTO) {
@@ -39,11 +37,12 @@ public class ReservationMapper {
     }
 
     public void updateReservationDTO(ReservationDTO reservationDTO, Long workPlaceId, LocalDate date) {
-        List<Reservation> reservations = reservationService.findAllByWorkPlaceAndRentDay(workPlaceId, date);
+        List<Reservation> reservations = reservationServiceImpl.findAllByWorkPlaceAndRentDay(workPlaceId, date);
         if (!reservations.isEmpty()) {
             if (reservations.size() == 2) {
                 reservationDTO.setTime("full");
             }
+            //switch
             if (reservationDTO.getTime() == null) {
                 for (Reservation reservation : reservations) {
                     if (reservation.getTimeFrom().getHour() == 8 && reservation.getTimeTo().getHour() == 13)
@@ -54,12 +53,13 @@ public class ReservationMapper {
                         reservationDTO.setTime("full");
                 }
             }
+
         }
     }
 
     public void setOtherValues(Reservation reservation, ReservationDTO reservationDTO, Long workPlaceId) {
-        Person person = profileService.getPerson();
-        WorkPlace workPlace = workPlaceService.findById(workPlaceId);
+        Person person = profileServiceImpl.getPerson();
+        WorkPlace workPlace = workPlaceServiceImpl.findById(workPlaceId);
         reservation.setIsPayed(false);
         reservation.setIsConfirmed(false);
         reservation.setIsActual(true);
@@ -70,19 +70,36 @@ public class ReservationMapper {
     }
 
     private void setTime(ReservationDTO reservationDTO, Reservation reservation) {
-        if (reservationDTO.getTime().equals("first")) {
-            reservation.setTimeFrom(LocalTime.of(8, 0));
-            reservation.setTimeTo(LocalTime.of(13, 0));
-            reservation.setPriceTotal(500.0);
-        } else if (reservationDTO.getTime().equals("second")) {
-            reservation.setTimeFrom(LocalTime.of(13, 0));
-            reservation.setTimeTo(LocalTime.of(18, 0));
-            reservation.setPriceTotal(500.0);
-        } else {
-            reservation.setTimeFrom(LocalTime.of(8, 0));
-            reservation.setTimeTo(LocalTime.of(18, 0));
-            reservation.setPriceTotal(400.0);
+        switch (reservationDTO.getTime()) {
+            case "first":
+                reservation.setTimeFrom(LocalTime.of(8, 0));
+                reservation.setTimeTo(LocalTime.of(13, 0));
+                reservation.setPriceTotal(500.0);
+                break;
+            case "second":
+                reservation.setTimeFrom(LocalTime.of(13, 0));
+                reservation.setTimeTo(LocalTime.of(18, 0));
+                reservation.setPriceTotal(500.0);
+                break;
+            default:
+                reservation.setTimeFrom(LocalTime.of(8, 0));
+                reservation.setTimeTo(LocalTime.of(18, 0));
+                reservation.setPriceTotal(400.0);
+                break;
         }
+//        if (reservationDTO.getTime().equals("first")) {
+//            reservation.setTimeFrom(LocalTime.of(8, 0));
+//            reservation.setTimeTo(LocalTime.of(13, 0));
+//            reservation.setPriceTotal(500.0);
+//        } else if (reservationDTO.getTime().equals("second")) {
+//            reservation.setTimeFrom(LocalTime.of(13, 0));
+//            reservation.setTimeTo(LocalTime.of(18, 0));
+//            reservation.setPriceTotal(500.0);
+//        } else {
+//            reservation.setTimeFrom(LocalTime.of(8, 0));
+//            reservation.setTimeTo(LocalTime.of(18, 0));
+//            reservation.setPriceTotal(400.0);
+//        }
     }
 
     private void saveData(Person person, WorkPlace workPlace, Reservation reservation) {

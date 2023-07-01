@@ -43,13 +43,31 @@ values ('Робоче місце № 10', 'Комфортний стіл та с
 insert into reservation(work_place_id, renter_id, rent_day, time_from, time_to, total_price, is_payed, is_confirmed)
 values (1, 3, current_date, current_time + 1 minute, current_time + 2 minute, 100, true, true);
 
-insert into rating(work_place_id) values (1);
-insert into rating(work_place_id, number_of_using) values (2, 1);
-insert into rating(work_place_id, number_of_using) values (3, 1);
-insert into rating(work_place_id, number_of_using) values (4, 3);
-insert into rating(work_place_id, number_of_using) values (5, 1);
-insert into rating(work_place_id, number_of_using) values (6, 5);
-insert into rating(work_place_id) values (7);
-insert into rating(work_place_id) values (8);
-insert into rating(work_place_id, number_of_using) values (9, 9);
-insert into rating(work_place_id, number_of_using) values (10, 10);
+insert into rating(work_place_id)
+values (1);
+insert into rating(work_place_id, number_of_using)
+values (2, 1);
+insert into rating(work_place_id, number_of_using)
+values (3, 1);
+insert into rating(work_place_id, number_of_using)
+values (4, 3);
+insert into rating(work_place_id, number_of_using)
+values (5, 1);
+insert into rating(work_place_id, number_of_using)
+values (6, 5);
+insert into rating(work_place_id)
+values (7);
+insert into rating(work_place_id)
+values (8);
+insert into rating(work_place_id, number_of_using)
+values (9, 9);
+insert into rating(work_place_id, number_of_using)
+values (10, 10);
+
+insert into drink(name, price, ingredients)
+values ('Bramble', 150,
+        'Gin, lemon juice, simple syrup, creme de mure, lemon half-wheel, fresh blackberry.');
+
+    insert into drink(name, price, ingredients)
+values ('Mojito', 120,
+    'Rum, mint, lime, sugar, club soda.');
