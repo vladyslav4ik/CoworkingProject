@@ -4,6 +4,7 @@ import coworking.project.dto.DrinkDTO;
 import coworking.project.dto.DrinkMapper;
 import coworking.project.exceptions.DrinkNotFoundException;
 import coworking.project.exceptions.InvalidDrinkParametersException;
+import coworking.project.models.Drink;
 import coworking.project.services.DrinkServiceImpl;
 import coworking.project.util.ErrorResponse;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,13 +40,16 @@ public class DrinksController {
 
     @GetMapping("/get")
     public DrinkDTO getDrink(@Param("name") String name) {
-        return drinkMapper.convertToDTO(drinkService.getDrinkByName(name));
+        Optional<Drink> optional = drinkService.getDrinkByName(name);
+        if (!optional.isPresent())
+            throw new DrinkNotFoundException();
+        return drinkMapper.convertToDTO(optional.get());
     }
 
     @PostMapping("/new")
     public HttpStatus addDrink(@RequestBody @Valid DrinkDTO drinkDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            throwException(bindingResult);
+            throw new InvalidDrinkParametersException(getExceptionMessage(bindingResult));
         drinkService.saveDrink(drinkMapper.convertToDrink(drinkDTO));
         return HttpStatus.OK;
     }
@@ -53,7 +58,7 @@ public class DrinksController {
     public HttpStatus updateDrink(@RequestBody @Valid DrinkDTO drinkDTO, @Param("name") String name,
                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            throwException(bindingResult);
+            throw new InvalidDrinkParametersException(getExceptionMessage(bindingResult));
         drinkService.updateDrink(name, drinkMapper.convertToDrink(drinkDTO));
         return HttpStatus.OK;
     }
@@ -65,7 +70,7 @@ public class DrinksController {
     }
 
     //?!
-    private void throwException(BindingResult bindingResult) {
+    private String getExceptionMessage(BindingResult bindingResult) {
         StringBuilder builder = new StringBuilder();
         List<FieldError> errors = bindingResult.getFieldErrors();
         for (FieldError error : errors) {
@@ -74,7 +79,7 @@ public class DrinksController {
                     .append(error.getDefaultMessage())
                     .append("; ");
         }
-        throw new InvalidDrinkParametersException(builder.toString());
+        return builder.toString();
     }
 
 
