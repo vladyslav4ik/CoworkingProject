@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DrinkServiceImpl implements DrinkService {
@@ -23,8 +22,8 @@ public class DrinkServiceImpl implements DrinkService {
     }
 
     @Override
-    public Optional<Drink> getDrinkByName(String name) {
-        return drinksRepository.findByName(name);
+    public Drink getDrinkByName(String name) {
+        return drinksRepository.findByName(name).orElseThrow(DrinkNotFoundException::new);
     }
 
     @Override
@@ -36,25 +35,15 @@ public class DrinkServiceImpl implements DrinkService {
     @Override
     @Transactional
     public void updateDrink(String name, Drink updatedDrink) {
-        Optional<Drink> optional = getDrinkByName(name);
-        if (optional.isPresent()) {
-            Drink drink = optional.get();
-            updatedDrink.setId(drink.getId());
-            drinksRepository.save(updatedDrink);
-        } else {
-            throw new DrinkNotFoundException();
-        }
+        Drink drink = getDrinkByName(name);
+        updatedDrink.setId(drink.getId());
+        drinksRepository.save(updatedDrink);
     }
 
     @Override
     @Transactional
     public void deleteDrinkByName(String name) {
-        Optional<Drink> optional = getDrinkByName(name);
-        if (optional.isPresent()) {
-            Drink drinkToDelete = optional.get();
-            drinksRepository.delete(drinkToDelete);
-        } else {
-            throw new DrinkNotFoundException();
-        }
+        getDrinkByName(name);
+        drinksRepository.deleteByName(name);
     }
 }
