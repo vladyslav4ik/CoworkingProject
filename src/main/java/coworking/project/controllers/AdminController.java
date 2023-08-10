@@ -3,10 +3,8 @@ package coworking.project.controllers;
 import coworking.project.dto.PersonMapper;
 import coworking.project.models.Person;
 import coworking.project.services.AdminService;
-import coworking.project.services.PeopleServiceImpl;
-import coworking.project.services.ReservationServiceImpl;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
+import coworking.project.services.PeopleService;
+import coworking.project.services.ReservationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,46 +19,41 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final AdminService adminService;
     private final PersonMapper personMapper;
-    private final PeopleServiceImpl peopleServiceImpl;
-    private final ReservationServiceImpl reservationServiceImpl;
+    private final PeopleService peopleService;
+    private final ReservationService reservationService;
 
-    public AdminController(AdminService adminService, PersonMapper personMapper, PeopleServiceImpl peopleServiceImpl, ReservationServiceImpl reservationServiceImpl) {
+    public AdminController(AdminService adminService, PersonMapper personMapper, PeopleService peopleService, ReservationService reservationService) {
         this.adminService = adminService;
         this.personMapper = personMapper;
-        this.peopleServiceImpl = peopleServiceImpl;
-        this.reservationServiceImpl = reservationServiceImpl;
+        this.peopleService = peopleService;
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEVELOPER')")
     public String getAdminPage(Model model) {
         model.addAttribute("users", adminService.findAll()
                 .stream()
-                .map(personMapper::convertToPersonDTO)
-                .collect(Collectors.toList()));
+                .map(personMapper::convertToPersonDTO).collect(Collectors.toList()));
         return "admin/admin";
     }
 
     @GetMapping("/reservations")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEVELOPER')")
     public String getReservations(Model model) {
-        model.addAttribute("reservationsToConfirm", reservationServiceImpl.findPayedReservations());
+        model.addAttribute("reservationsToConfirm", reservationService.findPayedReservations());
         return "admin/reservations";
     }
 
     @GetMapping("/reservations/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEVELOPER')")
     public String confirmReservation(@PathVariable("id") Long id) {
         adminService.confirmReservation(id);
         return "redirect:/admin/reservations";
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEVELOPER')")
     public String setAdminRole(@PathVariable Long id) {
-        Person person = peopleServiceImpl.findById(id);
+        Person person = peopleService.findById(id);
         person.setRole("ROLE_ADMIN");
-        peopleServiceImpl.update(id, person);
+        peopleService.update(id, person);
         return "redirect:/admin";
     }
 }

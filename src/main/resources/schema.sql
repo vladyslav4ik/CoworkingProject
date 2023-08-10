@@ -23,8 +23,8 @@ create table reservation
     work_place_id int references work_place (id) on delete cascade,
     renter_id     int references person (id) on delete cascade,
     rent_day      date check (rent_day >= current_date) not null,
-    time_from     time                                  not null,
-    time_to       time                                  not null,
+    time_from     time check (time_from >= '08:00:00')  not null,
+    time_to       time check (time_to <= '18:00:00')    not null,
     is_payed      boolean default false,
     is_confirmed  boolean default false,
     is_actual     boolean default true,
@@ -39,13 +39,4 @@ create table rating
     work_place_id   long references work_place (id) on delete cascade,
     number_of_using int not null default 0,
     foreign key (work_place_id) references work_place (id)
-);
-
-create table drink
-(
-    id          long auto_increment primary key,
-    name        varchar(100)              not null unique,
-    price       decimal check (price > 0) not null,
-    ingredients varchar(200)              not null,
-    img_url     varchar(200) unique
 );

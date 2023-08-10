@@ -3,7 +3,7 @@ package coworking.project.controllers;
 import coworking.project.dto.PersonDTO;
 import coworking.project.dto.PersonMapper;
 import coworking.project.models.Person;
-import coworking.project.services.AuthorizationServiceImpl;
+import coworking.project.services.AuthorizationService;
 import coworking.project.util.PersonValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +20,12 @@ import javax.validation.Valid;
 public class AuthorizationController {
     private final PersonMapper personMapper;
     private final PersonValidator personValidator;
-    private final AuthorizationServiceImpl authorizationServiceImpl;
+    private final AuthorizationService authorizationService;
 
-    public AuthorizationController(PersonMapper personMapper, PersonValidator personValidator, AuthorizationServiceImpl authorizationServiceImpl) {
+    public AuthorizationController(PersonMapper personMapper, PersonValidator personValidator, AuthorizationService authorizationService) {
         this.personMapper = personMapper;
         this.personValidator = personValidator;
-        this.authorizationServiceImpl = authorizationServiceImpl;
+        this.authorizationService = authorizationService;
     }
 
     @GetMapping("/login")
@@ -47,7 +47,7 @@ public class AuthorizationController {
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors())
             return "auth/signup";
-        authorizationServiceImpl.save(person);
+        authorizationService.save(person);
         return "redirect:/home";
     }
 }

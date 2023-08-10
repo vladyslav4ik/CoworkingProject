@@ -1,12 +1,12 @@
 package coworking.project.controllers;
 
+import coworking.project.dto.PersonDTO;
 import coworking.project.dto.PersonMapper;
 import coworking.project.dto.PersonUpdateDTO;
 import coworking.project.dto.PersonUpdateMapper;
 import coworking.project.models.Person;
-import coworking.project.services.PeopleServiceImpl;
-import coworking.project.services.ProfileServiceImpl;
-import org.springframework.security.access.prepost.PreAuthorize;
+import coworking.project.services.PeopleService;
+import coworking.project.services.ProfileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,41 +21,38 @@ import javax.validation.Valid;
 @RequestMapping("/profile")
 public class ProfileController {
     private final PersonMapper personMapper;
-    private final PeopleServiceImpl peopleServiceImpl;
-    private final ProfileServiceImpl profileServiceImpl;
+    private final PeopleService peopleService;
+    private final ProfileService profileService;
     private final PersonUpdateMapper personUpdateMapper;
 
-    public ProfileController(PersonMapper personMapper, PeopleServiceImpl peopleServiceImpl, ProfileServiceImpl profileServiceImpl, PersonUpdateMapper personUpdateMapper) {
+    public ProfileController(PersonMapper personMapper, PeopleService peopleService, ProfileService profileService, PersonUpdateMapper personUpdateMapper) {
         this.personMapper = personMapper;
-        this.peopleServiceImpl = peopleServiceImpl;
-        this.profileServiceImpl = profileServiceImpl;
+        this.peopleService = peopleService;
+        this.profileService = profileService;
         this.personUpdateMapper = personUpdateMapper;
     }
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'DEVELOPER')")
     public String getUserProfile(Model model) {
-        Person person = profileServiceImpl.getPerson();
+        Person person = profileService.getPerson();
         model.addAttribute("person", personMapper.convertToPersonDTO(person));
         return "user/profile";
     }
 
     @GetMapping("/edit")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'DEVELOPER')")
     public String editUserProfile(Model model) {
-        Person person = profileServiceImpl.getPerson();
+        Person person = profileService.getPerson();
         model.addAttribute("person", personUpdateMapper.convertToPersonUpdateDTO(person));
         return "user/edit";
     }
 
     @PatchMapping("/edit")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'DEVELOPER')")
     public String saveChanges(@ModelAttribute("person") @Valid PersonUpdateDTO personUpdateDTO,
                               BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "user/edit";
         Person person = personUpdateMapper.convertToPerson(personUpdateDTO);
-        peopleServiceImpl.update(person.getId(), person);
+        peopleService.update(person.getId(), person);
         return "redirect:/profile";
     }
 }

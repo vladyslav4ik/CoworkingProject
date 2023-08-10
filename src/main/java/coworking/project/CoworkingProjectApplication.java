@@ -4,9 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
@@ -17,20 +14,9 @@ public class CoworkingProjectApplication {
         SpringApplication.run(CoworkingProjectApplication.class, args);
     }
 
-//    @Bean
-//    public JavaMailSender getJavaMailSender() {
-//        return new JavaMailSenderImpl();
-//    }
 
     @Bean
     public ModelMapper getModelMapper() {
         return new ModelMapper();
-    }
-
-    @Bean
-    public SimpleMailMessage getSimpleMailMessage() {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("coworking.email.test@gmail.com");
-        return simpleMailMessage;
     }
 }
