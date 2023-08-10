@@ -6,11 +6,12 @@ import coworking.project.exceptions.DrinkNotFoundException;
 import coworking.project.exceptions.InvalidDrinkParametersException;
 import coworking.project.models.Drink;
 import coworking.project.services.DrinkServiceImpl;
-import coworking.project.util.ExceptionMessage;
+import coworking.project.util.ErrorResponse;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,43 +31,68 @@ public class DrinksController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DrinkDTO>> getDrinks() {
-        return new ResponseEntity<>(drinkService.getDrinks()
+    public List<DrinkDTO> getDrinks() {
+        return drinkService.getDrinks()
                 .stream()
                 .map(drinkMapper::convertToDTO)
-                .collect(Collectors.toList()), HttpStatus.OK);
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/get")
-    public ResponseEntity<DrinkDTO> getDrink(@Param("name") String name) {
+    public DrinkDTO getDrink(@Param("name") String name) {
         Optional<Drink> optional = drinkService.getDrinkByName(name);
         if (!optional.isPresent())
             throw new DrinkNotFoundException();
-        return new ResponseEntity<>(drinkMapper.convertToDTO(optional.get()), HttpStatus.OK);
+        return drinkMapper.convertToDTO(optional.get());
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Drink> addDrink(@RequestBody @Valid DrinkDTO drinkDTO, BindingResult bindingResult) {
+    public HttpStatus addDrink(@RequestBody @Valid DrinkDTO drinkDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            throw new InvalidDrinkParametersException(ExceptionMessage.create(bindingResult));
-        Drink drink = drinkMapper.convertToDrink(drinkDTO);
-        drinkService.saveDrink(drink);
-        return new ResponseEntity<>(drink, HttpStatus.OK);
+            throw new InvalidDrinkParametersException(getExceptionMessage(bindingResult));
+        drinkService.saveDrink(drinkMapper.convertToDrink(drinkDTO));
+        return HttpStatus.OK;
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<Drink> updateDrink(@RequestBody @Valid DrinkDTO drinkDTO, @Param("name") String name,
-                                             BindingResult bindingResult) {
+    public HttpStatus updateDrink(@RequestBody @Valid DrinkDTO drinkDTO, @Param("name") String name,
+                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            throw new InvalidDrinkParametersException(ExceptionMessage.create(bindingResult));
-        Drink drink = drinkMapper.convertToDrink(drinkDTO);
-        drinkService.updateDrink(name, drink);
-        return new ResponseEntity<>(drink, HttpStatus.OK);
+            throw new InvalidDrinkParametersException(getExceptionMessage(bindingResult));
+        drinkService.updateDrink(name, drinkMapper.convertToDrink(drinkDTO));
+        return HttpStatus.OK;
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteDrink(@Param("name") String name) {
+    public HttpStatus deleteDrink(@Param("name") String name) {
         drinkService.deleteDrinkByName(name);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return HttpStatus.OK;
+    }
+
+    //?!
+    private String getExceptionMessage(BindingResult bindingResult) {
+        StringBuilder builder = new StringBuilder();
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            builder.append(error.getField())
+                    .append(" - ")
+                    .append(error.getDefaultMessage())
+                    .append("; ");
+        }
+        return builder.toString();
+    }
+
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> catchDrinkNotFound(DrinkNotFoundException e) {
+        ErrorResponse response = new ErrorResponse("Drink with this name was not found!",
+                System.currentTimeMillis());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> cathchInvalidDrink(InvalidDrinkParametersException e) {
+        ErrorResponse response = new ErrorResponse(e.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
