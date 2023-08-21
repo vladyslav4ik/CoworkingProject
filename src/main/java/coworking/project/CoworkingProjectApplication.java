@@ -9,14 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 public class CoworkingProjectApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(CoworkingProjectApplication.class, args);
-    }
-
-
-    @Bean
-    public ModelMapper getModelMapper() {
-        return new ModelMapper();
     }
 }

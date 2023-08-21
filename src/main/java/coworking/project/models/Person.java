@@ -35,6 +35,7 @@ public class Person {
     @Column(name = "role")
     private String role;
 
+    @NotNull
     @Min(value = 1915)
     @Column(name = "year_of_birth")
     private Integer yearOfBirth;

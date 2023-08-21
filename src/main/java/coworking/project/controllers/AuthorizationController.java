@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/auth")
 public class AuthorizationController {
     private final PersonMapper personMapper;
     private final PersonValidator personValidator;
@@ -48,6 +47,6 @@ public class AuthorizationController {
         if (bindingResult.hasErrors())
             return "auth/signup";
         authorizationService.save(person);
-        return "redirect:/home";
+        return "redirect:/login";
     }
 }

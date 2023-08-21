@@ -7,10 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Getter
@@ -21,6 +18,7 @@ public class PersonDTO {
     private Long id;
 
     @Email
+    @NotEmpty
     private String email;
 
     @NotEmpty
@@ -33,6 +31,7 @@ public class PersonDTO {
     private String role;
 
     @Min(value = 1915)
+    @NotNull
     private Integer yearOfBirth;
 
     private List<Reservation> reservations;

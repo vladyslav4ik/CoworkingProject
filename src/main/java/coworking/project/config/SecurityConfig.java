@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .hasRole("DEVELOPER")
                 .antMatchers("/admin")
                 .hasAnyRole("ADMIN", "DEVELOPER")
-                .antMatchers("/", "/error", "/auth/signup", "/auth/login", "/workPlaces",
+                .antMatchers("/", "/error", "/signup", "/login", "/workPlaces",
                         "/workPlaces/rating", "/workPlaces/status", "/images/**", "/info/pricing",
                         "/info/aboutUs")
                 .permitAll()
@@ -50,10 +50,10 @@ public class SecurityConfig {
                 .hasAnyRole("USER", "ADMIN", "DEVELOPER")
                 .and()
                 .formLogin()
-                .loginPage("/auth/login")
+                .loginPage("/login")
                 .loginProcessingUrl("/process_login")
                 .defaultSuccessUrl("/", true)
-                .failureUrl("/auth/login?error")
+                .failureUrl("/login?error")
                 .and()
                 .logout()
                 .logoutUrl("/logout")
