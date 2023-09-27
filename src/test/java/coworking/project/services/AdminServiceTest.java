@@ -5,6 +5,8 @@ import coworking.project.models.Person;
 import coworking.project.models.Reservation;
 import coworking.project.repositories.PeopleRepository;
 import coworking.project.repositories.ReservationsRepository;
+import coworking.project.util.fabric.PersonFabric;
+import coworking.project.util.model.PersonType;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -55,8 +57,7 @@ class AdminServiceTest {
     @Test
     void confirmReservation() {
         Reservation reservation = new Reservation();
-        Person person = new Person();
-        person.setEmail("some@email");
+        Person person = PersonFabric.getPerson(PersonType.PERSON_WITH_EMAIL);
         reservation.setRenter(person);
 
         when(reservationsRepository.findById(1L)).thenReturn(Optional.of(reservation));

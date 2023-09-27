@@ -2,6 +2,8 @@ package coworking.project.services;
 
 import coworking.project.models.Person;
 import coworking.project.repositories.PeopleRepository;
+import coworking.project.util.fabric.PersonFabric;
+import coworking.project.util.model.PersonType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,9 +29,7 @@ class AuthorizationServiceTest {
 
     @Test
     void save() {
-        Person person = new Person();
-        person.setPassword("password");
-        person.setEmail("some@email");
+        Person person = PersonFabric.getPerson(PersonType.PERSON_WITH_EMAIL_AND_PASSWORD);
 
         when(passwordEncoder.encode(person.getPassword())).thenReturn("encoded");
         authorizationService.save(person);
